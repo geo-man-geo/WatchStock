@@ -8,6 +8,10 @@
         public string finnhubIndustry { get; set; }
         public DateOnly IPO { get; set; }
         public string StockName { get; set;}
-        
+        public string Phone { get; set;}
+        public double ShareOutstandingeNumber { get; set;}
+        public string Ticker { get; set;}   
+        public string Weburl { get; set;}
+
     }
 }
