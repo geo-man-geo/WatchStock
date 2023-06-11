@@ -9,27 +9,24 @@ namespace WatchStock.Controller.StockController
     [ApiController]
     public class StockValueController : ControllerBase
     {
-        private ICurrentValue _currentValue;
-       public StockValueController(ICurrentValue currentValue)
-       {
+        private IStockService _currentValue;
+        private ILogger<StockValueController> _logger;
+        public StockValueController(IStockService currentValue, ILogger<StockValueController> logger )
+        {
             _currentValue = currentValue;
-       }
+            _logger = logger;
+        }
+          
 
-        // GET: api/<MovieController>
         [HttpGet]
         [Route("{stockSymbol}")]
-        public async Task<CurrentValueResponseModel> AddStock(string stockSymbol)
+        public async Task<IActionResult> GetStockDetails(string stockSymbol)
         {
-            CurrentValueResponseModel? result = await _currentValue.AddStock(stockSymbol);
-            return result;
-        }
-
-        [HttpGet]
-        [Route("db/{stockSymbol}")]
-        public async Task<CurrentValueResponseModel> GetStock(string stockSymbol)
-        {
-            CurrentValueResponseModel? result = await _currentValue.GetStock(stockSymbol);
-            return result;
+            _logger.LogInformation("GOING TO CONTROLLER");
+            CurrentValueResponseModel? result = await _currentValue.GetStockValues(stockSymbol);
+            _logger.LogInformation($"DATA FETCHED: {stockSymbol}");
+            return Ok(result);
         }
     }
 }
+    
