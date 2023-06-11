@@ -1,0 +1,67 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "WatchStock, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/StockValue/{stockSymbol}": {
+      "get": {
+        "tags": [
+          "StockValue"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "stockSymbol",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CurrentValueResponseModel"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CurrentValueResponseModel": {
+      "type": "object",
+      "properties": {
+        "stockId": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "stockSymbol": {
+          "type": "string"
+        },
+        "currentPrice": {
+          "format": "double",
+          "type": "number"
+        },
+        "percentChange": {
+          "format": "double",
+          "type": "number"
+        },
+        "highPriceOfTheDay": {
+          "format": "double",
+          "type": "number"
+        },
+        "lowPriceOfTheDay": {
+          "format": "double",
+          "type": "number"
+        }
+      }
+    }
+  }
+}

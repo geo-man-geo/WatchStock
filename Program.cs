@@ -1,6 +1,5 @@
 using Microsoft.Data.SqlClient;
-using WatchStock.Repositories.StockRepository;
-using WatchStock.RepositoryContracts.StockRepositoryContract;
+using NLog.Extensions.Logging;
 using WatchStock.ServiceContracts.StockContract;
 using WatchStock.Services.StockServices;
 
@@ -9,13 +8,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<ICurrentValue, CurrentValueService>();
-builder.Services.AddTransient<ICurrentValueRepository, CurrentValueRepository>();
+builder.Services.AddTransient<IStockService, StockService>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<SqlConnection>(_ => new SqlConnection(builder.Configuration.GetConnectionString("stockDBConfig")));
+builder.Host.ConfigureLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.SetMinimumLevel(LogLevel.Trace);
+    logging.AddNLog();
+});
+var appInsightsConnectionString = builder.Configuration.GetValue<string>("ApplicationInsights:InstrumentationKey");
+builder.Services.AddApplicationInsightsTelemetryWorkerService(options =>
+{
+    options.ConnectionString = appInsightsConnectionString;
+});
 
 
 var app = builder.Build();
@@ -26,6 +34,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStaticFiles();
+app.Logger.LogDebug("debug-message");
+app.Logger.LogInformation("information-message");
+app.Logger.LogCritical("critical-message");
 
 app.UseHttpsRedirection();
 
